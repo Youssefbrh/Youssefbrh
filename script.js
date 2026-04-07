@@ -27,7 +27,7 @@
 const CONFIG = {
 
   // ── Landing screen ───────────────────────────────────────────
-  landingTitle:    "Pour Sugar",
+  landingTitle:    "Pour Sarah",
   landingSubtitle: "Il y a des choses que je voulais te dire…",
 
 
@@ -56,7 +56,7 @@ const CONFIG = {
   letterTitle: "Une lettre pour toi",
 
   // The "Chère ___," line at the top of the letter
-  salutation: "Chère Sugar,",
+  salutation: "Chère Bunny,",
 
   // ──────────────────────────────────────────────────────────────
   //  YOUR LETTER TEXT
