@@ -27,8 +27,8 @@
 const CONFIG = {
 
   // ── Landing screen ───────────────────────────────────────────
-  landingTitle:    "For Sugar",
-  landingSubtitle: "There are things I've been meaning to say…",
+  landingTitle:    "Pour Sugar",
+  landingSubtitle: "Il y a des choses que je voulais te dire…",
 
 
   // ── Birthday Gate ─────────────────────────────────────────────
@@ -47,16 +47,16 @@ const CONFIG = {
     year:  2000, // ← EDIT: 4-digit birth year
   },
 
-  birthdayPrompt:   "Just one little thing before you read this…",
-  birthdayQuestion: "When's your birthday, love?",
-  birthdayError:    "Hmm, that doesn't seem right. Try again?",
+  birthdayPrompt:   "Juste une petite chose avant que tu lises ceci…",
+  birthdayQuestion: "C'est quand ton anniversaire, mon amour ?",
+  birthdayError:    "Hmm, ça ne semble pas correct. Réessaie ?",
 
 
   // ── Letter ────────────────────────────────────────────────────
-  letterTitle: "A Letter For You",
+  letterTitle: "Une lettre pour toi",
 
-  // The "Dear ___," line at the top of the letter
-  salutation: "Dear Sugar,",
+  // The "Chère ___," line at the top of the letter
+  salutation: "Chère Sugar,",
 
   // ──────────────────────────────────────────────────────────────
   //  YOUR LETTER TEXT
@@ -71,23 +71,23 @@ const CONFIG = {
 
     // ↓↓ PASTE YOUR LETTER HERE — replace everything between these markers ↓↓
 
-    "I've been sitting with this for a while now — turning the right words over, setting them down, starting again. Not because I don't know what I want to say, but because I wanted to say it well. You deserve that.",
+    "Je tourne ces mots dans ma tête depuis un moment — je les pose, je les reprends, je recommence. Non pas parce que je ne sais pas quoi dire, mais parce que je voulais le dire bien. Tu mérites ça.",
 
-    "There are things I did wrong. I know which ones. And I know that acknowledging them doesn't undo them — but I want you to know that I see them clearly, without excuses layered on top.",
+    "Il y a des choses que j'ai mal faites. Je sais lesquelles. Et je sais que les reconnaître ne les efface pas — mais je veux que tu saches que je les vois clairement, sans excuses par-dessus.",
 
-    "You are someone who shows up with your whole heart. I haven't always matched that. That's something I carry, and something I want to be better at — not as a promise made in a hard moment, but as a quiet, steady intention.",
+    "Tu es quelqu'un qui donne de tout son cœur. Je n'ai pas toujours été à la hauteur. C'est quelque chose que je porte, et que je veux améliorer — non pas comme une promesse faite dans un moment difficile, mais comme une intention douce et constante.",
 
-    "I miss you the way you miss something that made ordinary days feel lighter. I miss the specific version of myself that existed when you were close.",
+    "Tu me manques comme manque quelque chose qui rendait les jours ordinaires plus légers. La version de moi-même qui existait quand tu étais là me manque.",
 
-    "I'm not asking you to forget, or to rush. I just wanted you to know — in writing, in something you can hold — that you matter to me. That I'm sorry. And that I mean it.",
+    "Je ne te demande pas d'oublier, ni de te précipiter. Je voulais juste que tu saches — par écrit, dans quelque chose que tu peux garder — que tu comptes pour moi. Que je suis désolé(e). Et que je le pense vraiment.",
 
     // ↑↑ END OF PLACEHOLDER TEXT — replace everything above this line ↑↑
 
   ],
 
   // ── Closing ───────────────────────────────────────────────────
-  closingSignature: "— Yours",
-  closingNote:      "Thank you for reading.",
+  closingSignature: "— À toi",
+  closingNote:      "Merci de m'avoir lu.",
 
 };
 
@@ -278,7 +278,7 @@ function handleBirthdaySubmit(e) {
 
   // Basic empty-check
   if (!day || !month || !year) {
-    DOM.birthdayError.textContent = 'Please fill in all three fields.';
+    DOM.birthdayError.textContent = 'Merci de remplir les trois champs.';
     return;
   }
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A personal letter.">
+  <meta name="description" content="Une lettre personnelle.">
   <meta name="robots" content="noindex, nofollow">
   <title>For Sugar</title>
 
@@ -28,10 +28,10 @@
     <div class="landing-content fade-up">
       <span class="accent-mark" aria-hidden="true">✦</span>
       <!-- Title text is also set via CONFIG.landingTitle in script.js -->
-      <h1 class="landing-title" id="landing-title">For Sugar</h1>
+      <h1 class="landing-title" id="landing-title">Pour Sugar</h1>
       <!-- Subtitle is set via CONFIG.landingSubtitle -->
-      <p class="landing-subtitle" id="landing-subtitle">There are things I've been meaning to say…</p>
-      <button class="btn btn--primary" id="btn-open">Open</button>
+      <p class="landing-subtitle" id="landing-subtitle">Il y a des choses que je voulais te dire…</p>
+      <button class="btn btn--primary" id="btn-open">Ouvrir</button>
     </div>
 
   </section>
@@ -53,34 +53,34 @@
 
     <div class="birthday-card fade-up">
       <!-- Prompt text set via CONFIG.birthdayPrompt -->
-      <p class="birthday-prompt" id="birthday-prompt">Just one little thing before you read this…</p>
+      <p class="birthday-prompt" id="birthday-prompt">Juste une petite chose avant que tu lises ceci…</p>
       <!-- Question set via CONFIG.birthdayQuestion -->
-      <h2 class="birthday-question" id="birthday-question">When's your birthday, love?</h2>
+      <h2 class="birthday-question" id="birthday-question">C'est quand ton anniversaire, mon amour ?</h2>
 
       <form class="birthday-form" id="birthday-form" novalidate>
         <fieldset class="birthday-fieldset">
-          <legend class="sr-only">Enter your date of birth to unlock the letter</legend>
+          <legend class="sr-only">Entre ta date de naissance pour déverrouiller la lettre</legend>
 
           <div class="birthday-inputs">
             <div class="input-group">
-              <label for="bd-day">Day</label>
+              <label for="bd-day">Jour</label>
               <input
                 type="number"
                 id="bd-day"
                 name="day"
                 min="1"
                 max="31"
-                placeholder="DD"
+                placeholder="JJ"
                 inputmode="numeric"
                 autocomplete="off"
-                aria-label="Day of birth"
+                aria-label="Jour de naissance"
               >
             </div>
 
             <span class="input-sep" aria-hidden="true">/</span>
 
             <div class="input-group">
-              <label for="bd-month">Month</label>
+              <label for="bd-month">Mois</label>
               <input
                 type="number"
                 id="bd-month"
@@ -90,14 +90,14 @@
                 placeholder="MM"
                 inputmode="numeric"
                 autocomplete="off"
-                aria-label="Month of birth"
+                aria-label="Mois de naissance"
               >
             </div>
 
             <span class="input-sep" aria-hidden="true">/</span>
 
             <div class="input-group input-group--wide">
-              <label for="bd-year">Year</label>
+              <label for="bd-year">Année</label>
               <input
                 type="number"
                 id="bd-year"
@@ -107,7 +107,7 @@
                 placeholder="YYYY"
                 inputmode="numeric"
                 autocomplete="off"
-                aria-label="Year of birth"
+                aria-label="Année de naissance"
               >
             </div>
           </div>
@@ -169,7 +169,7 @@
 
       <!-- Appears after letter paragraphs finish revealing -->
       <div class="letter-continue" id="letter-continue" aria-hidden="true">
-        <button class="btn btn--ghost" id="btn-to-closing">— close this letter —</button>
+        <button class="btn btn--ghost" id="btn-to-closing">— fermer cette lettre —</button>
       </div>
 
       <div class="letter-end-spacer" aria-hidden="true"></div>
@@ -187,7 +187,7 @@
     <div class="closing-content fade-up">
       <!-- Note set via CONFIG.closingNote -->
       <p class="closing-note" id="closing-note"></p>
-      <button class="btn btn--ghost" id="btn-replay">↩ Read from the beginning</button>
+      <button class="btn btn--ghost" id="btn-replay">↩ Relire depuis le début</button>
     </div>
   </section>
 
