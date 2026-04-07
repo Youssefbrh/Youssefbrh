@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A personal letter.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>For Sugar</title>
+
+  <!-- Google Fonts: Playfair Display (serif) · Inter (sans) · Dancing Script (accent) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 1 · LANDING
+  ══════════════════════════════════════════════════ -->
+  <section id="screen-landing" class="screen screen--dark active" aria-label="Introduction">
+
+    <div class="petals" id="petals-landing" aria-hidden="true"></div>
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <div class="landing-content fade-up">
+      <span class="accent-mark" aria-hidden="true">✦</span>
+      <!-- Title text is also set via CONFIG.landingTitle in script.js -->
+      <h1 class="landing-title" id="landing-title">For Sugar</h1>
+      <!-- Subtitle is set via CONFIG.landingSubtitle -->
+      <p class="landing-subtitle" id="landing-subtitle">There are things I've been meaning to say…</p>
+      <button class="btn btn--primary" id="btn-open">Open</button>
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 2 · BIRTHDAY GATE
+       ──────────────────────────────────────────────────
+       NOTE: This check is a sentimental access gate only.
+       It is NOT real security — the birthday value is
+       visible in script.js to anyone reading source code.
+       The goal is to create an intimate, personal moment,
+       not to restrict access.
+  ══════════════════════════════════════════════════ -->
+  <section id="screen-birthday" class="screen screen--dark" aria-label="Birthday verification">
+
+    <div class="petals" id="petals-birthday" aria-hidden="true"></div>
+    <div class="ambient-glow ambient-glow--subtle" aria-hidden="true"></div>
+
+    <div class="birthday-card fade-up">
+      <!-- Prompt text set via CONFIG.birthdayPrompt -->
+      <p class="birthday-prompt" id="birthday-prompt">Just one little thing before you read this…</p>
+      <!-- Question set via CONFIG.birthdayQuestion -->
+      <h2 class="birthday-question" id="birthday-question">When's your birthday, love?</h2>
+
+      <form class="birthday-form" id="birthday-form" novalidate>
+        <fieldset class="birthday-fieldset">
+          <legend class="sr-only">Enter your date of birth to unlock the letter</legend>
+
+          <div class="birthday-inputs">
+            <div class="input-group">
+              <label for="bd-day">Day</label>
+              <input
+                type="number"
+                id="bd-day"
+                name="day"
+                min="1"
+                max="31"
+                placeholder="DD"
+                inputmode="numeric"
+                autocomplete="off"
+                aria-label="Day of birth"
+              >
+            </div>
+
+            <span class="input-sep" aria-hidden="true">/</span>
+
+            <div class="input-group">
+              <label for="bd-month">Month</label>
+              <input
+                type="number"
+                id="bd-month"
+                name="month"
+                min="1"
+                max="12"
+                placeholder="MM"
+                inputmode="numeric"
+                autocomplete="off"
+                aria-label="Month of birth"
+              >
+            </div>
+
+            <span class="input-sep" aria-hidden="true">/</span>
+
+            <div class="input-group input-group--wide">
+              <label for="bd-year">Year</label>
+              <input
+                type="number"
+                id="bd-year"
+                name="year"
+                min="1990"
+                max="2015"
+                placeholder="YYYY"
+                inputmode="numeric"
+                autocomplete="off"
+                aria-label="Year of birth"
+              >
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Error message injected by JS -->
+        <p class="birthday-error" id="birthday-error" role="alert" aria-live="polite"></p>
+
+        <button type="submit" class="btn btn--primary" id="btn-unlock">Continue →</button>
+      </form>
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 3 · THE LETTER
+  ══════════════════════════════════════════════════ -->
+  <section id="screen-letter" class="screen screen--light" aria-label="The letter">
+
+    <div class="petals petals--light" id="petals-letter" aria-hidden="true"></div>
+
+    <!-- Easter egg: lily corner blooms — animate in on letter unlock -->
+    <div class="lily-corner lily-corner--tl" aria-hidden="true"></div>
+    <div class="lily-corner lily-corner--tr" aria-hidden="true"></div>
+    <div class="lily-corner lily-corner--bl" aria-hidden="true"></div>
+    <div class="lily-corner lily-corner--br" aria-hidden="true"></div>
+
+    <div class="letter-scroll-area">
+
+      <article class="letter-card" id="letter-card">
+
+        <header class="letter-header">
+          <div class="letter-deco" aria-hidden="true">
+            <span class="deco-line"></span>
+            <span class="deco-bloom">✿</span>
+            <span class="deco-line"></span>
+          </div>
+          <!-- Title set via CONFIG.letterTitle -->
+          <h2 class="letter-title" id="letter-title"></h2>
+          <!-- Salutation set via CONFIG.salutation -->
+          <p class="letter-salutation" id="letter-salutation"></p>
+        </header>
+
+        <!-- Letter paragraphs injected from CONFIG.letterParagraphs -->
+        <div class="letter-body" id="letter-body"></div>
+
+        <footer class="letter-footer">
+          <div class="letter-deco" aria-hidden="true">
+            <span class="deco-line"></span>
+            <span class="deco-bloom">✿</span>
+            <span class="deco-line"></span>
+          </div>
+          <!-- Signature set via CONFIG.closingSignature -->
+          <p class="letter-signature" id="letter-signature"></p>
+        </footer>
+
+      </article>
+
+      <!-- Appears after letter paragraphs finish revealing -->
+      <div class="letter-continue" id="letter-continue" aria-hidden="true">
+        <button class="btn btn--ghost" id="btn-to-closing">— close this letter —</button>
+      </div>
+
+      <div class="letter-end-spacer" aria-hidden="true"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       SCREEN 4 · CLOSING
+  ══════════════════════════════════════════════════ -->
+  <section id="screen-closing" class="screen screen--dark" aria-label="Closing">
+    <div class="ambient-glow ambient-glow--subtle" aria-hidden="true"></div>
+    <div class="closing-content fade-up">
+      <!-- Note set via CONFIG.closingNote -->
+      <p class="closing-note" id="closing-note"></p>
+      <button class="btn btn--ghost" id="btn-replay">↩ Read from the beginning</button>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       OPTIONAL BACKGROUND MUSIC
+       ──────────────────────────────────────────────────
+       To add ambient music:
+
+         1. Place your MP3 file at:  assets/music.mp3
+         2. Uncomment the <audio> and <button> elements below
+         3. In script.js, find the comment "AUDIO BLOCK"
+            and uncomment that section
+
+       The button will appear as a small floating toggle
+       in the bottom-right corner of every screen.
+  ══════════════════════════════════════════════════ -->
+  <!--
+  <audio id="bg-music" loop preload="none">
+    <source src="assets/music.mp3" type="audio/mpeg">
+  </audio>
+  <button
+    class="btn-audio"
+    id="btn-audio"
+    aria-label="Toggle background music"
+    aria-pressed="false"
+    title="Toggle music"
+  >♪</button>
+  -->
+
+  <script src="script.js"></script>
+</body>
+</html>
