@@ -58,7 +58,10 @@ final class NotchWindowController {
             .environmentObject(state.pomodoro)
             .environmentObject(state.pet)
 
-        let hosting = NSHostingView(rootView: root)
+        // Ignore the safe area, otherwise SwiftUI insets the content by the
+        // notch/menu-bar height and the island floats below the notch instead
+        // of growing out of it.
+        let hosting = NSHostingView(rootView: root.ignoresSafeArea())
         hosting.autoresizingMask = [.width, .height]
         panel.contentView = hosting
 

@@ -144,45 +144,46 @@ final class MediaController: ObservableObject {
         }
 
         let sep = "|~|"
-        let script: String
-        if app == .spotify {
-            script = """
-            tell application "Spotify"
-                set st to player state as text
-                set t to name of current track
-                set a to artist of current track
-                set art to artwork url of current track
-                return st & "\(sep)" & t & "\(sep)" & a & "\(sep)" & art
-            end tell
-            """
-        } else {
-            script = """
-            tell application "Music"
-                set st to player state as text
-                set t to name of current track
-                set a to artist of current track
-                return st & "\(sep)" & t & "\(sep)" & a & "\(sep)"
-            end tell
-            """
-        }
+        // Fetch only the essentials here — artwork is fetched separately so a
+        // track with no artwork can't blow up the whole read.
+        let script = """
+        tell application "\(app.scriptName)"
+            set st to player state as text
+            set t to name of current track
+            set a to artist of current track
+            return st & "\(sep)" & t & "\(sep)" & a
+        end tell
+        """
 
         runAppleScript(script) { [weak self] output in
-            guard let output else { return }
+            guard let self, let output else { return }
             let parts = output.components(separatedBy: sep)
             guard parts.count >= 3 else { return }
-            Task { @MainActor in
+            self.isPlaying = parts[0].trimmingCharacters(in: .whitespacesAndNewlines) == "playing"
+            self.title = parts[1]
+            self.artist = parts[2]
+            self.refreshArtwork(app: app)
+        }
+    }
+
+    private func refreshArtwork(app: PlayerApp) {
+        switch app {
+        case .spotify:
+            // Spotify exposes an http artwork URL we can fetch.
+            runAppleScript("tell application \"Spotify\" to return artwork url of current track") { [weak self] output in
                 guard let self else { return }
-                self.isPlaying = parts[0].trimmingCharacters(in: .whitespacesAndNewlines) == "playing"
-                self.title = parts[1]
-                self.artist = parts[2]
-                if parts.count >= 4, let url = URL(string: parts[3].trimmingCharacters(in: .whitespacesAndNewlines)),
-                   url.scheme?.hasPrefix("http") == true {
-                    self.loadArtwork(from: url, key: parts[3])
-                } else if app == .music {
-                    self.artwork = NSWorkspace.shared.runningApplications
-                        .first { $0.bundleIdentifier == PlayerApp.music.rawValue }?.icon
+                let raw = (output ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                if let url = URL(string: raw), url.scheme?.hasPrefix("http") == true {
+                    self.loadArtwork(from: url, key: raw)
+                } else {
+                    self.artwork = nil
+                    self.lastArtworkKey = nil
                 }
             }
+        case .music:
+            // Apple Music doesn't hand out a URL; fall back to the app icon.
+            artwork = NSWorkspace.shared.runningApplications
+                .first { $0.bundleIdentifier == PlayerApp.music.rawValue }?.icon
         }
     }
 
@@ -195,28 +196,25 @@ final class MediaController: ObservableObject {
         }.resume()
     }
 
-    private func runAppleScript(_ source: String, completion: @escaping (String?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-            process.arguments = ["-e", source]
-            let pipe = Pipe()
-            process.standardOutput = pipe
-            process.standardError = Pipe()
-            do {
-                try process.run()
-                process.waitUntilExit()
-                guard process.terminationStatus == 0 else {
-                    completion(nil)
-                    return
-                }
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                let output = String(data: data, encoding: .utf8)?
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                completion(output)
-            } catch {
-                completion(nil)
-            }
+    /// Runs AppleScript **in-process** via NSAppleScript. This matters: Apple
+    /// Events are then sent by NotchNova itself, so macOS shows the "NotchNova
+    /// wants to control Spotify/Music" prompt (honoring
+    /// NSAppleEventsUsageDescription) and the automation actually works.
+    /// Shelling out to /usr/bin/osascript attributes the request to osascript
+    /// instead and silently fails in a GUI app.
+    private func runAppleScript(_ source: String, completion: @MainActor @escaping (String?) -> Void) {
+        // NSAppleScript is fastest and safest on the main thread; the scripts
+        // here are tiny and run at most every few seconds.
+        var error: NSDictionary?
+        guard let script = NSAppleScript(source: source) else {
+            completion(nil)
+            return
+        }
+        let descriptor = script.executeAndReturnError(&error)
+        if error != nil {
+            completion(nil)
+        } else {
+            completion(descriptor.stringValue)
         }
     }
 }

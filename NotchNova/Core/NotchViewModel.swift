@@ -56,8 +56,9 @@ final class NotchViewModel: ObservableObject {
     @Published var hudEvent: HUDEvent?
     @Published var dragTargeted = false
 
-    /// Size of the expanded island content.
-    let expandedSize = CGSize(width: 640, height: 320)
+    /// Size of the expanded island content. Kept snug so it doesn't feel
+    /// empty when little is playing.
+    let expandedSize = CGSize(width: 600, height: 282)
     /// Total panel canvas (leaves room for glow, alert wings and the pet).
     var panelSize: CGSize {
         CGSize(width: max(expandedSize.width + 80, geometry.notchWidth + 460),
