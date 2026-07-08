@@ -3,6 +3,7 @@ import SwiftUI
 /// The opened island: content area for the selected tab + a compact tab bar.
 struct ExpandedView: View {
     @EnvironmentObject var vm: NotchViewModel
+    @Namespace private var tabNamespace
 
     @AppStorage(Prefs.Key.petEnabled.rawValue) private var petEnabled = true
 
@@ -33,29 +34,40 @@ struct ExpandedView: View {
     }
 
     private var tabBar: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 4) {
             ForEach(tabs) { tab in
+                let selected = vm.selectedTab == tab
                 Button {
                     withAnimation(vm.spring) { vm.selectedTab = tab }
                 } label: {
                     HStack(spacing: 5) {
                         Image(systemName: tab.icon)
                             .font(.system(size: 11, weight: .semibold))
-                        if vm.selectedTab == tab {
+                        if selected {
                             Text(tab.title)
-                                .font(.system(size: 11, weight: .semibold))
+                                .font(.system(size: 11, weight: .semibold, design: .rounded))
                         }
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(
-                        Capsule().fill(vm.selectedTab == tab ? Theme.surfaceHover : .clear)
-                    )
-                    .foregroundStyle(vm.selectedTab == tab ? Theme.textPrimary : Theme.textSecondary)
+                    .padding(.horizontal, 11)
+                    .padding(.vertical, 7)
+                    .background {
+                        if selected {
+                            Capsule()
+                                .fill(Theme.accent.opacity(0.22))
+                                .overlay(Capsule().stroke(Theme.accent.opacity(0.35), lineWidth: 0.5))
+                                .matchedGeometryEffect(id: "tabPill", in: tabNamespace)
+                        }
+                    }
+                    .foregroundStyle(selected ? Theme.textPrimary : Theme.textSecondary)
+                    .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
             }
         }
+        .padding(3)
+        .background(
+            Capsule().fill(Color.white.opacity(0.05))
+        )
     }
 }
 

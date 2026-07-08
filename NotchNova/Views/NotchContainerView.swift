@@ -32,18 +32,23 @@ struct NotchContainerView: View {
         isExpanded ? vm.expandedSize.height : vm.geometry.notchHeight
     }
 
+    private var bottomRadius: CGFloat { isExpanded ? Theme.cornerRadius : 11 }
+    private var shape: NotchShape { NotchShape(topRadius: topRadius, bottomRadius: bottomRadius) }
+
     var body: some View {
         ZStack(alignment: .top) {
+            // Soft glow halo bleeding out from behind the island.
             AuroraGlowView(isExpanded: isExpanded)
-                .frame(width: islandWidth + 60, height: islandHeight + 40)
+                .frame(width: islandWidth + 80, height: islandHeight + 60)
                 .allowsHitTesting(false)
 
             island
 
             if petEnabled, petPeeks, !isExpanded {
-                PetView(size: 26, interactive: true)
+                PetView(size: 26, interactive: false)
                     .offset(x: pet.peekOffsetX, y: vm.geometry.notchHeight - 7)
                     .transition(.opacity)
+                    .allowsHitTesting(false)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -51,9 +56,7 @@ struct NotchContainerView: View {
 
     private var island: some View {
         ZStack(alignment: .top) {
-            NotchShape(topRadius: topRadius, bottomRadius: isExpanded ? Theme.cornerRadius : 11)
-                .fill(Theme.islandBackground)
-                .shadow(color: .black.opacity(isExpanded ? 0.6 : 0), radius: 16, y: 6)
+            islandBackground
 
             if isExpanded {
                 ExpandedView()
@@ -65,14 +68,49 @@ struct NotchContainerView: View {
             }
         }
         .frame(width: islandWidth, height: islandHeight)
-        .contentShape(NotchShape(topRadius: topRadius, bottomRadius: isExpanded ? Theme.cornerRadius : 11))
-        .onHover { vm.hoverChanged($0) }
+        .contentShape(shape)
         .onTapGesture {
             if !isExpanded { vm.open() }
         }
         .onDrop(of: [UTType.fileURL], delegate: NotchDropDelegate(vm: vm, shelf: shelf))
         .animation(vm.spring, value: isExpanded)
         .animation(vm.spring, value: wingExtra)
+    }
+
+    /// The premium surface: frosted glass + tint gradient + a bright top
+    /// hairline that fades down the sides, plus a floating shadow. When
+    /// closed it stays near-black so it melts into the hardware notch.
+    @ViewBuilder
+    private var islandBackground: some View {
+        ZStack {
+            if isExpanded {
+                VisualEffectView(material: .hudWindow, blending: .behindWindow)
+                    .clipShape(shape)
+                shape.fill(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.08), Color.black.opacity(0.5)],
+                        startPoint: .top, endPoint: .bottom
+                    )
+                )
+                shape.fill(Color.black.opacity(0.28))
+            } else {
+                shape.fill(Color.black)
+            }
+        }
+        .overlay(
+            shape.stroke(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(isExpanded ? 0.55 : 0.10),
+                        Color.white.opacity(0.06),
+                        Color.clear,
+                    ],
+                    startPoint: .top, endPoint: .bottom
+                ),
+                lineWidth: 1
+            )
+        )
+        .shadow(color: .black.opacity(isExpanded ? 0.5 : 0), radius: 22, y: 12)
     }
 }
 

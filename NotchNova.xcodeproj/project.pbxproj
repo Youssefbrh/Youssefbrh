@@ -39,6 +39,7 @@
 		606756935108AB19FECFC079 /* ExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472C8035281E3EDABA282728 /* ExpandedView.swift */; };
 		CA8EC9F188D31E19A2D9B69F /* NotchContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1374CE70C9B5A30C99B83B8 /* NotchContainerView.swift */; };
 		C385AD17D7F0E0569E26CFF8 /* NotchShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96544E560024E44CABAA404F /* NotchShape.swift */; };
+		F0944F3CA6FADE5209FB20A7 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E0DF4BEB3CDB19C08DC07C /* VisualEffectView.swift */; };
 		67A5B662636D8D19D91D18CA /* VisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D6043D462D5D4ECB8F50EF /* VisualizerView.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		472C8035281E3EDABA282728 /* ExpandedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedView.swift; sourceTree = "<group>"; };
 		A1374CE70C9B5A30C99B83B8 /* NotchContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchContainerView.swift; sourceTree = "<group>"; };
 		96544E560024E44CABAA404F /* NotchShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchShape.swift; sourceTree = "<group>"; };
+		D5E0DF4BEB3CDB19C08DC07C /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		54D6043D462D5D4ECB8F50EF /* VisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualizerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,6 +257,7 @@
 				472C8035281E3EDABA282728 /* ExpandedView.swift */,
 				A1374CE70C9B5A30C99B83B8 /* NotchContainerView.swift */,
 				96544E560024E44CABAA404F /* NotchShape.swift */,
+				D5E0DF4BEB3CDB19C08DC07C /* VisualEffectView.swift */,
 				54D6043D462D5D4ECB8F50EF /* VisualizerView.swift */,
 			);
 			path = Views;
@@ -360,6 +363,7 @@
 				606756935108AB19FECFC079 /* ExpandedView.swift in Sources */,
 				CA8EC9F188D31E19A2D9B69F /* NotchContainerView.swift in Sources */,
 				C385AD17D7F0E0569E26CFF8 /* NotchShape.swift in Sources */,
+				F0944F3CA6FADE5209FB20A7 /* VisualEffectView.swift in Sources */,
 				67A5B662636D8D19D91D18CA /* VisualizerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

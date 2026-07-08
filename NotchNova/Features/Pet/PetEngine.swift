@@ -97,7 +97,7 @@ final class PetEngine: ObservableObject {
         case 5...7:
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) { mood = .walking }
             withAnimation(.easeInOut(duration: 4)) {
-                peekOffsetX = .random(in: -70...70)
+                peekOffsetX = .random(in: -34...34)
             }
         default:
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) { mood = .sleeping }
