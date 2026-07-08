@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import ServiceManagement
 
 struct SettingsView: View {
@@ -11,6 +12,9 @@ struct SettingsView: View {
     @AppStorage(Prefs.Key.clipboardEnabled.rawValue) private var clipboardEnabled = true
     @AppStorage(Prefs.Key.alertsEnabled.rawValue) private var alertsEnabled = true
     @AppStorage(Prefs.Key.launchAtLogin.rawValue) private var launchAtLogin = false
+
+    @State private var diagnosis: String?
+    @State private var testing = false
 
     var body: some View {
         Form {
@@ -52,6 +56,37 @@ struct SettingsView: View {
                 Toggle("Clipboard history", isOn: $clipboardEnabled)
             }
 
+            Section("Now Playing connection") {
+                HStack {
+                    Button {
+                        runDiagnostic()
+                    } label: {
+                        if testing {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Text("Test connection")
+                        }
+                    }
+                    .disabled(testing)
+
+                    if let diagnosis, diagnosis.hasPrefix("🔒") {
+                        Button("Open Automation Settings") {
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+                    }
+                }
+
+                if let diagnosis {
+                    Text(diagnosis)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
             Section {
                 Text("NotchNova is a local app — nothing leaves your Mac.")
                     .font(.caption)
@@ -59,6 +94,15 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 420, height: 460)
+        .frame(width: 420, height: 560)
+    }
+
+    private func runDiagnostic() {
+        testing = true
+        diagnosis = nil
+        AppState.shared.media.diagnose { result in
+            diagnosis = result
+            testing = false
+        }
     }
 }

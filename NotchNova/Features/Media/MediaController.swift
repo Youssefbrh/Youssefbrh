@@ -196,25 +196,75 @@ final class MediaController: ObservableObject {
         }.resume()
     }
 
+    private struct ScriptResult {
+        var output: String? = nil
+        var errorNumber: Int? = nil
+        var errorMessage: String? = nil
+    }
+
     /// Runs AppleScript **in-process** via NSAppleScript. This matters: Apple
     /// Events are then sent by NotchNova itself, so macOS shows the "NotchNova
     /// wants to control Spotify/Music" prompt (honoring
     /// NSAppleEventsUsageDescription) and the automation actually works.
     /// Shelling out to /usr/bin/osascript attributes the request to osascript
     /// instead and silently fails in a GUI app.
-    private func runAppleScript(_ source: String, completion: @MainActor @escaping (String?) -> Void) {
-        // NSAppleScript is fastest and safest on the main thread; the scripts
-        // here are tiny and run at most every few seconds.
+    private func runAppleScriptRaw(_ source: String) -> ScriptResult {
         var error: NSDictionary?
         guard let script = NSAppleScript(source: source) else {
-            completion(nil)
-            return
+            return ScriptResult(errorMessage: "Couldn't compile the AppleScript.")
         }
         let descriptor = script.executeAndReturnError(&error)
-        if error != nil {
-            completion(nil)
-        } else {
-            completion(descriptor.stringValue)
+        if let error {
+            return ScriptResult(
+                errorNumber: error["NSAppleScriptErrorNumber"] as? Int,
+                errorMessage: error["NSAppleScriptErrorMessage"] as? String
+            )
+        }
+        return ScriptResult(output: descriptor.stringValue)
+    }
+
+    private func runAppleScript(_ source: String, completion: @MainActor @escaping (String?) -> Void) {
+        completion(runAppleScriptRaw(source).output)
+    }
+
+    /// User-facing connection test, surfaced in Settings. Running the query
+    /// also triggers the macOS automation prompt the first time.
+    func diagnose(_ completion: @MainActor @escaping (String) -> Void) {
+        guard let app = runningPlayer() else {
+            completion("Neither Spotify nor Apple Music is running.\nOpen one, play a track, then test again.")
+            return
+        }
+
+        let sep = "|~|"
+        let script = """
+        tell application "\(app.scriptName)"
+            set st to player state as text
+            set t to name of current track
+            set a to artist of current track
+            return st & "\(sep)" & t & "\(sep)" & a
+        end tell
+        """
+
+        let result = runAppleScriptRaw(script)
+        if let output = result.output {
+            let parts = output.components(separatedBy: sep)
+            if parts.count >= 3 {
+                completion("✅ Connected to \(app.scriptName).\nState: \(parts[0])\nNow playing: \(parts[1]) — \(parts[2])")
+            } else {
+                completion("Connected to \(app.scriptName), but the reply was unexpected:\n\(output)")
+            }
+            return
+        }
+
+        switch result.errorNumber {
+        case -1743:
+            completion("🔒 macOS is blocking control of \(app.scriptName).\nTap “Open Automation Settings” below, turn ON NotchNova → \(app.scriptName), then quit and reopen NotchNova.")
+        case -1728:
+            completion("\(app.scriptName) is running but no track is loaded.\nPlay something and test again.")
+        case let n?:
+            completion("Error \(n): \(result.errorMessage ?? "unknown error").")
+        case nil:
+            completion(result.errorMessage ?? "Unknown error talking to \(app.scriptName).")
         }
     }
 }
