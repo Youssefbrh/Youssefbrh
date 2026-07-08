@@ -25,8 +25,20 @@ final class MediaController: ObservableObject {
         var scriptName: String { self == .spotify ? "Spotify" : "Music" }
     }
 
+    /// Apple restricted third-party access to MediaRemote's now-playing data
+    /// starting in macOS 15.4 — calling it there just logs "Operation not
+    /// permitted" on every poll. Skip it and use the AppleScript fallback.
+    private static var mediaRemoteAvailable: Bool {
+        let v = ProcessInfo.processInfo.operatingSystemVersion
+        if v.majorVersion > 15 { return false }
+        if v.majorVersion == 15, v.minorVersion >= 4 { return false }
+        return true
+    }
+
     func start() {
-        bridge = MediaRemoteBridge()
+        if Self.mediaRemoteAvailable {
+            bridge = MediaRemoteBridge()
+        }
 
         if bridge != nil {
             let center = NotificationCenter.default
@@ -41,13 +53,17 @@ final class MediaController: ObservableObject {
                 Task { @MainActor in self?.refreshFromBridge() }
             })
             refreshFromBridge()
+        } else {
+            // Populate immediately from Spotify / Music instead of waiting
+            // for the first poll tick.
+            refreshFromAppleScript()
         }
 
         // Safety net: covers locked-down MediaRemote and missed notifications.
         pollTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                if self.bridgeDelivers {
+                if self.bridge != nil, self.bridgeDelivers {
                     self.refreshFromBridge()
                 } else {
                     self.refreshFromAppleScript()
